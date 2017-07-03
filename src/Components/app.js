@@ -40,6 +40,7 @@ export class App extends Component {
             position: 'relative',
             left: '-30px'
         }
+       
 
         return (
             <div>
@@ -51,7 +52,7 @@ export class App extends Component {
                                 <span className="icon-bar"></span>
 
                             </button>
-                            <a className="navbar-brand" href="home">Device App</a>
+                            <a className="navbar-brand" href="#/">Device App</a>
                         </div>
                         <div className="collapse navbar-collapse" id="myNavbar">
                             <ul className="nav navbar-nav">
@@ -99,6 +100,8 @@ export class App extends Component {
                         </div>
                     </div>
                 </div>
+               <div id="toastr">
+               </div>
             </div>
         );
     }

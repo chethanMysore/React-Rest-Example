@@ -4,7 +4,7 @@ import { combineReducers, createStore } from 'redux';
 
 //calls the POST api to add a new device
 const postDevice = (postData) => {
-    console.log(postData);
+
     fetch('http://localhost:3050', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -16,21 +16,46 @@ const postDevice = (postData) => {
     });
 }
 
+const updateDevice = (updateData) => {
+    fetch(`http://localhost:3050/${updateData.DeviceId}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(updateData)
+    }).then(res => {
+        return res.json();
+    }).then(data => {
+        alert(data);
+    })
+}
+
+const deleteDevice = (devId) => {
+    fetch('http://localhost:3050/del/' + devId, {
+        method: 'POST'
+    }).then(res => {
+        return res.json();
+    }).then(data => {
+        alert(data);
+    })
+}
 //calls the POST api to add a new device image
 const postImage = (imgData) => {
-    console.log(imgData);
+
     let formData = new FormData();
-    formData.append('file', imgData.imgFile.files[0]);
+    formData.append('file', imgData.imgFile);
     fetch('http://localhost:3050/api/upload/' + imgData.imgId, {
         method: 'POST',
         body: formData
     }).then(res => {
         return res.json();
     }).then(data => {
-        alert(data.data);
+        if (data.error_code == 0) {
+            alert("Image uploaded successfully");
+        }
+        else {
+            alert("Image upload failed!");
+        }
     })
 }
-
 //helper to Device Reducer - performs device related tasks
 const deviceReducer = (state, action) => {
     switch (action.type) {
@@ -44,6 +69,22 @@ const deviceReducer = (state, action) => {
         case 'ADD_DEVICE':
             {
                 postDevice(action.data);
+                return state;
+            }
+        case 'UPDATE_DEVICE':
+            {
+                var data = {
+                    DeviceId: action.data.DeviceId,
+                    DeviceName: action.data.DeviceName,
+                    DeviceType: action.data.DeviceType,
+                    DeviceKey: action.data.DeviceKey
+                }
+                updateDevice(data);
+                return state;
+            }
+        case 'DELETE_DEVICE':
+            {
+                deleteDevice(action.data);
                 return state;
             }
     }
@@ -62,6 +103,11 @@ const imageReducer = (state, action) => {
                 postImage(action.data);
                 return state;
             }
+        case 'UPDATE_IMAGE':
+            {
+                postImage(action.data);
+                return state;
+            }
     }
 }
 
@@ -74,7 +120,18 @@ const filterReducer = (state, action) => {
                 DeviceName: state.DeviceName,
                 DeviceKey: state.DeviceKey,
                 DeviceType: state.DeviceType
-            });   
+            });
+    }
+}
+
+const toastrReducer = (state, action) => {
+    switch (action.type) {
+        case 'GET_STATE':
+            return state;
+        case 'SET_STATE':
+            return ({render: true});
+        case 'RESET_STATE': 
+            return ({render: false});
     }
 }
 
@@ -86,7 +143,18 @@ const getDeviceReducer = (state = [], action) => {
                 state = action.data;
                 return state;
             }
-    
+        case 'ADD_DEVICE':
+            {
+                return deviceReducer(null, action);
+            }
+        case 'UPDATE_DEVICE':
+            {
+                return deviceReducer(state, action);
+            }
+        case 'DELETE_DEVICE':
+            {
+                return deviceReducer(state, action);
+            }
         default:
             return state;
     }
@@ -102,6 +170,8 @@ const getImageReducer = (state = [], action) => {
             ];
         case 'ADD_IMAGE':
             return imageReducer(null, action);
+        case 'UPDATE_IMAGE':
+            return imageReducer(state, action);
         default:
             return state;
     }
@@ -112,13 +182,26 @@ const getFilterReducer = (state = [], action) => {
     switch (action.type) {
         case 'SET_FILTER_DATA':
             {
-                state=[];
-                action.data.map(data=>{
-                    state.push(filterReducer(data,action));
+                state = [];
+                action.data.map(data => {
+                    state.push(filterReducer(data, action));
                 });
                 return state;
-            }  
+            }
         default:
+            return state;
+    }
+}
+
+const getToastrReducer = (state = {render: false},action) => {
+    switch(action.type){
+        case 'GET_STATE':
+            return toastrReducer(state,action);
+        case 'SET_STATE':
+            return toastrReducer(state,action);
+        case 'RESET_STATE':
+            return toastrReducer(state,action);
+        default: 
             return state;
     }
 }
@@ -127,6 +210,7 @@ const getFilterReducer = (state = [], action) => {
 const deviceApp = combineReducers({ getDeviceReducer });
 const imageReducerApp = combineReducers({ getImageReducer });
 const filterApp = combineReducers({ getFilterReducer });
+const toastrApp = combineReducers({getToastrReducer});
 
 //A Module that contains methods to invoke reducers and members to access stores
 const Reducer = {
@@ -136,12 +220,16 @@ const Reducer = {
     getAllImages: (imgReducer) => {
         return imgReducer;
     },
-    getAllFilteredData: (filtrReducer)=>{
+    getAllFilteredData: (filtrReducer) => {
         return filtrReducer;
+    },
+    getToastrState: (toastrReducer) => {
+        return toastrReducer;
     },
     store: createStore(deviceApp),
     imageStore: createStore(imageReducerApp),
-    filter: createStore(filterApp)
+    filter: createStore(filterApp),
+    toastr: createStore(toastrApp)
 };
 
 //Exporting reducer module

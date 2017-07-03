@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom';
 
 //Device Entity Component
 import { DeviceEntity } from './DeviceEntity';
-
+import { ImageEditor } from './ImageEditor';
+import { NewImageEditor } from './NewImageEditor';
+import { Toastr } from './Toastr';
 //Reducers
 import Reducer from '../Reducers';
 
@@ -19,19 +21,21 @@ export class DeviceList extends Component {
         Reducer.store.subscribe(this.render);
         Reducer.imageStore.subscribe(this.render);
         Reducer.filter.subscribe(this.render);
+
         this.imageFormatter = this.imageFormatter.bind(this);
+        this.getData = this.getData.bind(this);
+
     }
 
-    //Event which is called when the component mounts on the page - GET Devices is called here
-    componentDidMount() {
+    getData() {
         fetch('http://localhost:3050')
             .then(response => {
                 return response.json();
             }).then(data => {
                 Reducer.store.dispatch({
-                        type: 'SET_ALL_DEVICES',
-                        data: data
-                    });
+                    type: 'SET_ALL_DEVICES',
+                    data: data
+                });
                 data.map(device => {
                     fetch('http://localhost:3050/api/download/' + device.DeviceName, { headers: { 'response-type': 'blob' } })
                         .then(res => {
@@ -48,9 +52,22 @@ export class DeviceList extends Component {
                                 data: imgData
                             })
                         });
-                    
                 });
             });
+    }
+
+    //Event which is called when the component mounts on the page - GET Devices is called here
+    componentDidMount() {
+        this.getData();
+        var msg = "Data fetched successfully";
+        Reducer.toastr.dispatch({
+            type: 'SET_STATE'
+        });
+        setTimeout(function () { ReactDOM.render(<Toastr message={msg} render={true} />, document.getElementById('toastr')); }, 3000);
+        setTimeout(function () {
+            Reducer.toastr.dispatch({ type: 'RESET_STATE' });
+            ReactDOM.render(<Toastr message={msg} render={true} />, document.getElementById('toastr'));
+        }, 6000);
     }
 
     //A Formatter for bootstrap table cell - for displaying images
@@ -77,10 +94,10 @@ export class DeviceList extends Component {
         let filterState = Reducer.filter.getState();
         var allFilteredData = Reducer.getAllFilteredData(filterState.getFilterReducer);
         var deviceData = [];
-       
+
         var allDevices = Reducer.getAllDevices(state.getDeviceReducer);
         var allImages = Reducer.getAllImages(imgState.getImageReducer);
-        if (allFilteredData != null && allFilteredData.length != 0) {        
+        if (allFilteredData != null && allFilteredData.length != 0) {
             allFilteredData.map(device => {
                 let devImg = allImages.filter(img => img.imgId == device.DeviceName);
                 deviceData.push({
@@ -106,6 +123,77 @@ export class DeviceList extends Component {
                 });
             }
         }
+        function onBeforeSaveCell(row, cellName, cellValue) {
+            //Any Validations before accepting the edited value
+
+        }
+        function onAfterSaveCell(row, cellName, cellValue) {
+            Reducer.store.dispatch({
+                type: 'UPDATE_DEVICE',
+                data: row
+            });
+            location.reload();
+        }
+        function onAfterDeleteRow(rowKey) {
+            Reducer.store.dispatch({
+                type: 'DELETE_DEVICE',
+                data: rowKey
+            });
+            location.reload();
+        }
+        function onAfterInsertRow(row) {
+            console.log(row);
+            var data = {
+                DeviceId: row.DeviceId,
+                DeviceName: row.DeviceName,
+                DeviceKey: row.DeviceKey,
+                DeviceType: row.DeviceType
+            };
+            var imgData = {
+                imgId: row.DeviceName,
+                imgFile: row.DeviceImage
+            };
+            Reducer.store.dispatch({
+                type: 'ADD_DEVICE',
+                data: data
+            });
+            Reducer.imageStore.dispatch({
+                type: 'ADD_IMAGE',
+                data: imgData
+            });
+        }
+        const newNameEditor = (column, attr, editorClass, ignoreEditable) => {
+            return (
+                <input type='text' className={`${editorClass}`} { ...attr } />
+            );
+        }
+        const newImageEditor = (column, attr, editorClass, ignoreEditable) => {
+            /*function getFieldValue(){
+                return this.refs.newImage.files[0];
+            }
+            return (
+                <input type='file' className={`${editorClass}`} ref='newImage' />
+            );*/
+            return (
+                <NewImageEditor ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
+            );
+        }
+        const createImageEditor = (onUpdate, props) => (<ImageEditor {...props} />);
+        const cellEditProp = {
+            mode: 'dbclick',
+            beforeSaveCell: onBeforeSaveCell,
+            afterSaveCell: onAfterSaveCell,
+            blurToSave: true
+        };
+        const selectRowProp = {
+            mode: 'radio',
+            clickToSelect: true,
+            clickToSelectAndEditCell: true,
+            hideSelectColumn: true,
+            bgColor: '#edeef9',
+            className: 'row-selected'
+
+        }
         const options = {
             page: 1,//default page to display
             sizePerPageList: [{//dropdown for selecting the page size
@@ -128,16 +216,18 @@ export class DeviceList extends Component {
             firstPage: 'First',//Alias for first page
             lastPage: 'Last',//Alias for last page
             paginationPosition: 'bottom',//position of page navigation menu
-            noDataText: 'No Record Found'//default text to be displayed when no data available
-        } 
-        return (      
+            noDataText: 'No Record Found',//default text to be displayed when no data available
+            afterInsertRow: onAfterInsertRow,
+            afterDeleteRow: onAfterDeleteRow
+        }
+        return (
             <div>
-                <BootstrapTable data={deviceData} options={options} pagination tableStyle={{ border: '#0c68fc 1px solid', backgroundColor: '#61d6f9' }}>
-                    <TableHeaderColumn isKey dataField='DeviceId' headerAlign='left' width='90' height='50' dataAlign='center' dataSort display='block'>Device Id</TableHeaderColumn>
-                    <TableHeaderColumn dataField='DeviceName' headerAlign='left' width='115' height='50' dataAlign='center' dataSort display='block' filter={{ type: 'TextFilter', delay: 1000 }}>Device Name</TableHeaderColumn>
-                    <TableHeaderColumn dataField='DeviceKey' headerAlign='left' width='110' height='50' dataAlign='center' display='block'>Device Key</TableHeaderColumn>
+                <BootstrapTable data={deviceData} options={options} pagination={true} insertRow={true} deleteRow={true} selectRow={selectRowProp} tableStyle={{ border: '#0c68fc 1px solid', backgroundColor: '#61d6f9' }} cellEdit={cellEditProp} >
+                    <TableHeaderColumn isKey dataField='DeviceId' headerAlign='left' width='90' height='50' dataAlign='center' dataSort display='block' editable={false}>Device Id</TableHeaderColumn>
+                    <TableHeaderColumn dataField='DeviceName' headerAlign='left' width='115' height='50' dataAlign='center' dataSort display='block' filter={{ type: 'TextFilter', delay: 1000 }} editable={false} customInsertEditor={{ getElement: newNameEditor }}>Device Name</TableHeaderColumn>
+                    <TableHeaderColumn dataField='DeviceKey' headerAlign='left' width='110' height='50' dataAlign='center' display='block' >Device Key</TableHeaderColumn>
                     <TableHeaderColumn dataField='DeviceType' headerAlign='left' width='110' height='50' dataAlign='center' dataSort display='block'>Device Type</TableHeaderColumn>
-                    <TableHeaderColumn dataField='DeviceImage' headerAlign='left' width='140' height='50' dataFormat={this.imageFormatter} display='block'>Device Image</TableHeaderColumn>
+                    <TableHeaderColumn dataField='DeviceImage' headerAlign='left' width='140' height='50' dataFormat={this.imageFormatter} display='block' customEditor={{ getElement: createImageEditor }} customInsertEditor={{ getElement: newImageEditor }}>Device Image</TableHeaderColumn>
                 </BootstrapTable></div>);
     }
 }
