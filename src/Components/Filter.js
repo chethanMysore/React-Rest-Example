@@ -21,7 +21,7 @@ export class Filter extends Component {
     
     //Sets the filter type based on user input - by name, key or type
     setFilter(event) {
-        console.log(event);
+        
         if(event!=null){
         var filterName = event.target.value;
         let dataState = Reducer.store.getState();

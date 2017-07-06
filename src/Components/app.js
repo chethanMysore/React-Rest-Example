@@ -7,7 +7,7 @@ import { DeviceList } from './DeviceList';
 import { AddDevice } from './AddDevice';
 import { Ads } from './Ads';
 import { Filter } from './Filter';
-
+import {ToastrWrapper} from './ToastrWrapper';
 //Reducers
 import Reducer from '../Reducers';
 
@@ -100,8 +100,10 @@ export class App extends Component {
                         </div>
                     </div>
                 </div>
-               <div id="toastr">
+               <div >
+                    <ToastrWrapper />
                </div>
+               <div id="toastr"></div>
             </div>
         );
     }

@@ -1,7 +1,7 @@
 //React Dependencies
 import React from 'react';
 import { combineReducers, createStore } from 'redux';
-
+//import ToastrMapper from './ToastrMapper';
 //calls the POST api to add a new device
 const postDevice = (postData) => {
 
@@ -12,7 +12,9 @@ const postDevice = (postData) => {
     }).then(res => {
         return res.json();
     }).then(data => {
-        alert(data);
+        //alert(data);
+        //ToastrMapper.mapToast(data);
+        Reducer.message.dispatch({ type: 'ADD_MESSAGE', message: data });
     });
 }
 
@@ -68,7 +70,7 @@ const deviceReducer = (state, action) => {
             });
         case 'ADD_DEVICE':
             {
-                postDevice(action.data);
+                var res = postDevice(action.data);
                 return state;
             }
         case 'UPDATE_DEVICE':
@@ -129,9 +131,9 @@ const toastrReducer = (state, action) => {
         case 'GET_STATE':
             return state;
         case 'SET_STATE':
-            return ({render: true});
-        case 'RESET_STATE': 
-            return ({render: false});
+            return ({ render: true });
+        case 'RESET_STATE':
+            return ({ render: false });
     }
 }
 
@@ -164,10 +166,21 @@ const getDeviceReducer = (state = [], action) => {
 const getImageReducer = (state = [], action) => {
     switch (action.type) {
         case 'SET_ALL_IMAGES':
-            return [
-                ...state,
-                imageReducer(null, action)
-            ];
+            {
+                if (state != null) {
+                    return [
+                        ...state,
+                        imageReducer(null, action)
+                    ];
+                }
+                else{
+                    state=[];
+                    return [
+                        ...state,
+                        imageReducer(null, action)
+                    ];
+                }
+            }
         case 'ADD_IMAGE':
             return imageReducer(null, action);
         case 'UPDATE_IMAGE':
@@ -193,15 +206,34 @@ const getFilterReducer = (state = [], action) => {
     }
 }
 
-const getToastrReducer = (state = {render: false},action) => {
-    switch(action.type){
+const getToastrReducer = (state = { render: false }, action) => {
+    switch (action.type) {
         case 'GET_STATE':
-            return toastrReducer(state,action);
+            return toastrReducer(state, action);
         case 'SET_STATE':
-            return toastrReducer(state,action);
+            return toastrReducer(state, action);
         case 'RESET_STATE':
-            return toastrReducer(state,action);
-        default: 
+            return toastrReducer(state, action);
+        default:
+            return state;
+    }
+}
+
+const getMessageReducer = (state = [], action) => {
+    switch (action.type) {
+        case 'GET_MESSAGES':
+            return state;
+        case 'ADD_MESSAGE':
+            {
+                state.push(action.message);
+                return state;
+            }
+        case 'REMOVE_MESSAGE':
+            {
+                state.pop();
+                return state;
+            }
+        default:
             return state;
     }
 }
@@ -210,7 +242,8 @@ const getToastrReducer = (state = {render: false},action) => {
 const deviceApp = combineReducers({ getDeviceReducer });
 const imageReducerApp = combineReducers({ getImageReducer });
 const filterApp = combineReducers({ getFilterReducer });
-const toastrApp = combineReducers({getToastrReducer});
+const toastrApp = combineReducers({ getToastrReducer });
+const msgApp = combineReducers({ getMessageReducer });
 
 //A Module that contains methods to invoke reducers and members to access stores
 const Reducer = {
@@ -226,10 +259,14 @@ const Reducer = {
     getToastrState: (toastrReducer) => {
         return toastrReducer;
     },
+    getMessages: (msgReducer) => {
+        return msgReducer;
+    },
     store: createStore(deviceApp),
     imageStore: createStore(imageReducerApp),
     filter: createStore(filterApp),
-    toastr: createStore(toastrApp)
+    toastr: createStore(toastrApp),
+    message: createStore(msgApp)
 };
 
 //Exporting reducer module

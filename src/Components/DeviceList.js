@@ -36,6 +36,10 @@ export class DeviceList extends Component {
                     type: 'SET_ALL_DEVICES',
                     data: data
                 });
+                Reducer.message.dispatch({
+                    type: 'ADD_MESSAGE',
+                    message: 'Data Fetched Successfully'
+                });
                 data.map(device => {
                     fetch('http://localhost:3050/api/download/' + device.DeviceName, { headers: { 'response-type': 'blob' } })
                         .then(res => {
@@ -59,15 +63,22 @@ export class DeviceList extends Component {
     //Event which is called when the component mounts on the page - GET Devices is called here
     componentDidMount() {
         this.getData();
-        var msg = "Data fetched successfully";
-        Reducer.toastr.dispatch({
-            type: 'SET_STATE'
-        });
-        setTimeout(function () { ReactDOM.render(<Toastr message={msg} render={true} />, document.getElementById('toastr')); }, 3000);
-        setTimeout(function () {
-            Reducer.toastr.dispatch({ type: 'RESET_STATE' });
-            ReactDOM.render(<Toastr message={msg} render={true} />, document.getElementById('toastr'));
-        }, 6000);
+        /*  var msg = "Data fetched successfully";
+          var fadeIn = "toastrStyle";
+          var fadeOut = "toastr-fade-out";
+           Reducer.toastr.dispatch({
+                  type: 'SET_STATE'
+              });
+          
+          setTimeout(function () {
+             ReactDOM.render(<Toastr message={msg}  />, document.getElementById('toastr'));
+          }, 3000);
+          setTimeout(function () {
+              Reducer.toastr.dispatch({ type: 'RESET_STATE' });
+              //this.forceUpdate();
+               ReactDOM.render(<Toastr message={msg} />, document.getElementById('toastr'));
+          }, 6000);
+          Reducer.message.dispatch({type: 'ADD_MESSAGE',message: msg});*/
     }
 
     //A Formatter for bootstrap table cell - for displaying images
@@ -94,12 +105,15 @@ export class DeviceList extends Component {
         let filterState = Reducer.filter.getState();
         var allFilteredData = Reducer.getAllFilteredData(filterState.getFilterReducer);
         var deviceData = [];
+        var allDevices = [];
 
-        var allDevices = Reducer.getAllDevices(state.getDeviceReducer);
-        var allImages = Reducer.getAllImages(imgState.getImageReducer);
+        allDevices = Reducer.getAllDevices(state.getDeviceReducer);
+        var allImages = [];
+        allImages = Reducer.getAllImages(imgState.getImageReducer);
         if (allFilteredData != null && allFilteredData.length != 0) {
+            let devImg = [];
             allFilteredData.map(device => {
-                let devImg = allImages.filter(img => img.imgId == device.DeviceName);
+                devImg = allImages.filter(img => img.imgId == device.DeviceName);
                 deviceData.push({
                     DeviceId: device.DeviceId,
                     DeviceName: device.DeviceName,
@@ -111,8 +125,11 @@ export class DeviceList extends Component {
         }
         else {
             if (allDevices != null && allDevices.length != 0) {
+                let devImg = [];
                 allDevices.map(device => {
-                    let devImg = allImages.filter(img => img.imgId == device.DeviceName);
+                    if (allImages != null && allImages.length != 0) {
+                         devImg = allImages.filter(img => img.imgId == device.DeviceName);
+                    }
                     deviceData.push({
                         DeviceId: device.DeviceId,
                         DeviceName: device.DeviceName,
