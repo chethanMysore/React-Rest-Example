@@ -16,8 +16,8 @@ export class ChatRoom extends React.Component {
                 return res.json();
             }).then(data => {
                 this.setState({ messages: data });
-                 var objDiv = document.getElementById("style-2");
-                    objDiv.scrollTop = objDiv.scrollHeight;
+                var objDiv = document.getElementById("style-2");
+                objDiv.scrollTop = objDiv.scrollHeight;
             });
 
         this.forceUpdate();
@@ -42,7 +42,7 @@ export class ChatRoom extends React.Component {
                 .then(data => {
                     //alert(data);
                     this.fetchMessages();
-                   
+
                 })
 
             //this.setState({ messages: this.state.messages.push(postData) });
@@ -55,30 +55,31 @@ export class ChatRoom extends React.Component {
         var messages = [];
         messages = this.state.messages;
         messages.map(message => {
-            if (new Date(message.MessageAT).getDay() == new Date().getDay()) {
+            if (new Date(message.MessageAT) != 'Invalid Date' && new Date(message.MessageAT).getDay() == new Date().getDay()) {
                 message.MessageAT = new Date(message.MessageAT).toLocaleTimeString();
             }
-            else{
+            else if ((new Date(message.MessageAT)) != 'Invalid Date') {
                 message.MessageAT = new Date(message.MessageAT).toLocaleString();
             }
 
 
         });
+        console.log(messages);
         return (
             <div className={this.props.className}>
                 <br />
                 <div>
                     <input type="text" placeholder="Type Message Here" className="input" ref="text" onKeyPress={this.handleKeyPress} />
                     <div className="chat-room-message" id="style-2">
-                    {messages.map(message =>
+                        {messages.map(message =>
 
-                        <div  key={message._id}>
-                            <label className="label">{message.MessageText}</label>
+                            <div key={message._id}>
+                                <label className="label">{message.MessageText}</label>
 
-                            <sub><label style={{ fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif' }}>{message.MessageAT}</label></sub>
-                        </div>
+                                <sub><label style={{ fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif' }}>{message.MessageAT}</label></sub>
+                            </div>
 
-                    )}
+                        )}
                     </div>
                 </div>
             </div>
