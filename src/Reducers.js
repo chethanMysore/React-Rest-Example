@@ -26,7 +26,8 @@ const updateDevice = (updateData) => {
     }).then(res => {
         return res.json();
     }).then(data => {
-        alert(data);
+        //alert(data);
+        Reducer.message.dispatch({ type: 'ADD_MESSAGE', message: data });
     })
 }
 
@@ -36,7 +37,8 @@ const deleteDevice = (devId) => {
     }).then(res => {
         return res.json();
     }).then(data => {
-        alert(data);
+        //alert(data);
+        Reducer.message.dispatch({ type: 'ADD_MESSAGE', message: data });
     })
 }
 //calls the POST api to add a new device image
@@ -51,10 +53,12 @@ const postImage = (imgData) => {
         return res.json();
     }).then(data => {
         if (data.error_code == 0) {
-            alert("Image uploaded successfully");
+            //alert("Image uploaded successfully");
+            Reducer.message.dispatch({ type: 'ADD_MESSAGE', message: "Image uploaded successfully" });
         }
         else {
-            alert("Image upload failed!");
+            //alert("Image upload failed!");
+            Reducer.message.dispatch({ type: 'ADD_MESSAGE', message: "Image upload failed!" });
         }
     })
 }

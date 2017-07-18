@@ -38,7 +38,7 @@ export class Filter extends Component {
         return <form className="form-horizontal">
 
             <div className="form-group">
-                <label className="col-sm-offset-1 col-sm-2">Filters</label>
+                <label className="col-sm-2">Filters</label>
             </div>
             <div className="form-group">
                 <div className="row">
@@ -53,7 +53,7 @@ export class Filter extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-sm-3" id="search">
+                    <div className="col-sm-2" id="search">
 
                     </div>
                 </div>

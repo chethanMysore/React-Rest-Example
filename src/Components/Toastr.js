@@ -26,17 +26,13 @@ export class Toastr extends React.Component {
         var className = this.props != undefined ? this.props.className : "toastr-fade-out";
         if (!renderState.render) {
             className = "toastr-fade-out";
-            // document.getElementById('toastr').style.transition = '2s';
-            // document.getElementById('toastr').style.opacity = 0;
         }
         else {
             className = "toastrStyle";
         }
         
         return (
-            // <div className={className}>
-            //     <strong>{message}</strong>
-            // </div>
+            
              <div className={className}>
                 <svg width="350" height="180">
                     <g>
