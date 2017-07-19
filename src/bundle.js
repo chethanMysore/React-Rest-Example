@@ -3071,7 +3071,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //calls the POST api to add a new device
 var postDevice = function postDevice(postData) {
 
-    fetch('http://localhost:3050', {
+    fetch('http://10.22.14.66:3050', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(postData)
@@ -3085,7 +3085,7 @@ var postDevice = function postDevice(postData) {
 };
 
 var updateDevice = function updateDevice(updateData) {
-    fetch('http://localhost:3050/' + updateData.DeviceId, {
+    fetch('http://10.22.14.66:3050/' + updateData.DeviceId, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(updateData)
@@ -3098,7 +3098,7 @@ var updateDevice = function updateDevice(updateData) {
 };
 
 var deleteDevice = function deleteDevice(devId) {
-    fetch('http://localhost:3050/del/' + devId, {
+    fetch('http://10.22.14.66:3050/del/' + devId, {
         method: 'POST'
     }).then(function (res) {
         return res.json();
@@ -3112,7 +3112,7 @@ var postImage = function postImage(imgData) {
 
     var formData = new FormData();
     formData.append('file', imgData.imgFile);
-    fetch('http://localhost:3050/api/upload/' + imgData.imgId, {
+    fetch('http://10.22.14.66:3050/api/upload/' + imgData.imgId, {
         method: 'POST',
         body: formData
     }).then(function (res) {
@@ -28510,7 +28510,7 @@ var DeviceList = exports.DeviceList = function (_Component) {
     _createClass(DeviceList, [{
         key: 'getData',
         value: function getData() {
-            fetch('http://localhost:3050').then(function (response) {
+            fetch('http://10.22.14.66:3050').then(function (response) {
                 return response.json();
             }).then(function (data) {
                 _Reducers2.default.store.dispatch({
@@ -28522,7 +28522,7 @@ var DeviceList = exports.DeviceList = function (_Component) {
                     message: 'Data Fetched Successfully'
                 });
                 data.map(function (device) {
-                    fetch('http://localhost:3050/api/download/' + device.DeviceName, { headers: { 'response-type': 'blob' } }).then(function (res) {
+                    fetch('http://10.22.14.66:3050/api/download/' + device.DeviceName, { headers: { 'response-type': 'blob' } }).then(function (res) {
                         return res.blob();
                     }).then(function (data) {
 
@@ -39552,7 +39552,7 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
         value: function fetchMessages() {
             var _this2 = this;
 
-            fetch('http://localhost:3100').then(function (res) {
+            fetch('http://10.22.14.66:3100').then(function (res) {
                 return res.json();
             }).then(function (data) {
                 _this2.setState({ messages: data });
@@ -39575,7 +39575,7 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
             };
             console.log(postData);
             if (event != null && event.key == 'Enter') {*/
-            fetch('http://localhost:3100', {
+            fetch('http://10.22.14.66:3100', {
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify(postData)
@@ -39607,7 +39607,7 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
         value: function clearAllMessages() {
             var _this4 = this;
 
-            fetch('http://localhost:3100/clear').then(function (res) {
+            fetch('http://10.22.14.66:3100/clear').then(function (res) {
                 return res.json();
             }).then(function (data) {
                 //alert(data);
@@ -39737,7 +39737,7 @@ var ChatRoom = exports.ChatRoom = function (_React$Component) {
 
 
         /*fetchMessages() {
-            fetch('http://localhost:3100')
+            fetch('http://10.22.14.66:3100')
                 .then(res => {
                     return res.json();
                 }).then(data => {
@@ -39762,7 +39762,7 @@ var ChatRoom = exports.ChatRoom = function (_React$Component) {
             if (event != null && event.key == 'Enter') {
                 this.props.handleKeyPress(postData);
                 this.refs.text.value = "";
-                /* fetch('http://localhost:3100', {
+                /* fetch('http://10.22.14.66:3100', {
                      method: 'POST',
                      headers: { 'content-type': 'application/json' },
                      body: JSON.stringify(postData)

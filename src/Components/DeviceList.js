@@ -28,7 +28,7 @@ export class DeviceList extends Component {
     }
 
     getData() {
-        fetch('http://localhost:3050')
+        fetch('http://10.22.14.66:3050')
             .then(response => {
                 return response.json();
             }).then(data => {
@@ -41,7 +41,7 @@ export class DeviceList extends Component {
                     message: 'Data Fetched Successfully'
                 });
                 data.map(device => {
-                    fetch('http://localhost:3050/api/download/' + device.DeviceName, { headers: { 'response-type': 'blob' } })
+                    fetch('http://10.22.14.66:3050/api/download/' + device.DeviceName, { headers: { 'response-type': 'blob' } })
                         .then(res => {
                             return res.blob();
                         }).then(data => {

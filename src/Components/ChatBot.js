@@ -18,7 +18,7 @@ export class ChatBot extends React.Component {
     }
 
     fetchMessages() {
-        fetch('http://localhost:3100')
+        fetch('http://10.22.14.66:3100')
             .then(res => {
                 return res.json();
             }).then(data => {
@@ -39,7 +39,7 @@ export class ChatBot extends React.Component {
         };
         console.log(postData);
         if (event != null && event.key == 'Enter') {*/
-        fetch('http://localhost:3100', {
+        fetch('http://10.22.14.66:3100', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(postData)
@@ -69,7 +69,7 @@ export class ChatBot extends React.Component {
     }
 
     clearAllMessages() {
-        fetch('http://localhost:3100/clear')
+        fetch('http://10.22.14.66:3100/clear')
             .then(res => {
                 return res.json();
             }).then(data => {

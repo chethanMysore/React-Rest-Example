@@ -13,7 +13,7 @@ export class ChatRoom extends React.Component {
     }
 
     /*fetchMessages() {
-        fetch('http://localhost:3100')
+        fetch('http://10.22.14.66:3100')
             .then(res => {
                 return res.json();
             }).then(data => {
@@ -36,7 +36,7 @@ export class ChatRoom extends React.Component {
         if (event != null && event.key == 'Enter') {
             this.props.handleKeyPress(postData);
              this.refs.text.value = "";
-            /* fetch('http://localhost:3100', {
+            /* fetch('http://10.22.14.66:3100', {
                  method: 'POST',
                  headers: { 'content-type': 'application/json' },
                  body: JSON.stringify(postData)

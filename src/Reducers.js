@@ -5,7 +5,7 @@ import { combineReducers, createStore } from 'redux';
 //calls the POST api to add a new device
 const postDevice = (postData) => {
 
-    fetch('http://localhost:3050', {
+    fetch('http://10.22.14.66:3050', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(postData)
@@ -19,7 +19,7 @@ const postDevice = (postData) => {
 }
 
 const updateDevice = (updateData) => {
-    fetch(`http://localhost:3050/${updateData.DeviceId}`, {
+    fetch(`http://10.22.14.66:3050/${updateData.DeviceId}`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(updateData)
@@ -32,7 +32,7 @@ const updateDevice = (updateData) => {
 }
 
 const deleteDevice = (devId) => {
-    fetch('http://localhost:3050/del/' + devId, {
+    fetch('http://10.22.14.66:3050/del/' + devId, {
         method: 'POST'
     }).then(res => {
         return res.json();
@@ -46,7 +46,7 @@ const postImage = (imgData) => {
 
     let formData = new FormData();
     formData.append('file', imgData.imgFile);
-    fetch('http://localhost:3050/api/upload/' + imgData.imgId, {
+    fetch('http://10.22.14.66:3050/api/upload/' + imgData.imgId, {
         method: 'POST',
         body: formData
     }).then(res => {
