@@ -4,13 +4,15 @@ export class ChatRoom extends React.Component {
     constructor(props) {
         super(props);
         this.state = { messages: [] }
-        this.fetchMessages = this.fetchMessages.bind(this);
+        //this.fetchMessages = this.fetchMessages.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
     }
-    componentWillMount() {
-        this.fetchMessages();
+    componentDidMount() {
+       
+        // this.fetchMessages();
     }
-    fetchMessages() {
+
+    /*fetchMessages() {
         fetch('http://localhost:3100')
             .then(res => {
                 return res.json();
@@ -21,31 +23,34 @@ export class ChatRoom extends React.Component {
             });
 
         this.forceUpdate();
-    }
+    }*/
     handleKeyPress(event) {
         console.log(this.refs.text.value);
         var postData = {
-            MessageId: 1103,
+
             MessageText: this.refs.text.value,
             MessageAT: Date.now()
         };
         console.log(postData);
+
         if (event != null && event.key == 'Enter') {
-            fetch('http://localhost:3100', {
-                method: 'POST',
-                headers: { 'content-type': 'application/json' },
-                body: JSON.stringify(postData)
-            })
-                .then(res => {
-                    return res.json();
-                })
-                .then(data => {
-                    //alert(data);
-                    this.fetchMessages();
-
-                })
-
-            //this.setState({ messages: this.state.messages.push(postData) });
+            this.props.handleKeyPress(postData);
+             this.refs.text.value = "";
+            /* fetch('http://localhost:3100', {
+                 method: 'POST',
+                 headers: { 'content-type': 'application/json' },
+                 body: JSON.stringify(postData)
+             })
+                 .then(res => {
+                     return res.json();
+                 })
+                 .then(data => {
+                     //alert(data);
+                     this.fetchMessages();
+ 
+                 })
+ 
+             //this.setState({ messages: this.state.messages.push(postData) });*/
 
         }
     }
@@ -53,7 +58,7 @@ export class ChatRoom extends React.Component {
         //this.fetchMessages();
         //var className = this.props.show?"chat-room-show":"chat-room-hide";
         var messages = [];
-        messages = this.state.messages;
+        messages = this.props.messages;
         messages.map(message => {
             if (new Date(message.MessageAT) != 'Invalid Date' && new Date(message.MessageAT).getDay() == new Date().getDay()) {
                 message.MessageAT = new Date(message.MessageAT).toLocaleTimeString();
