@@ -48,7 +48,7 @@
 .chatbot-maximize{
    position: relative;
           
-            top: 50px;
+            top: 76px;
             width: 200px;
             height: 25px;
             opacity: 1;
@@ -104,6 +104,27 @@
   width:150px;
   overflow: hidden;
 }
+
+.chat-drop-show{
+        display: block;
+    position: absolute;
+    left: 58px;
+    top: 104px;
+    text-align: center;
+    background-color: ghostwhite;
+    width: 100px;
+    z-index: 2000;
+}
+
+.chat-drop-show:hover{
+  background-color: #b0f2e4;
+}
+
+.chat-drop-hide{
+  display: none;
+  z-index: 0;
+}
+
 #style-2::-webkit-scrollbar-track
 {
   -moz-appearance: scrollbartrack-vertical;
@@ -130,4 +151,24 @@
 .label{
   text-shadow: 5px 4px 6px #335f6f;
   color: #205644;
+}
+
+svg text {
+   font-family: FontAwesome;
+}
+
+.menu-label-show{
+      position: relative;
+    top: 57px;
+    left: 120px;
+    z-index: 2000;
+      transition: top 1s;
+}
+
+.menu-label-hide{
+        position: relative;
+    top: 272px;
+    left: 120px;
+    z-index: 0;
+    transition: top 1s;
 }

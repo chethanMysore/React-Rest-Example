@@ -4,7 +4,7 @@
   "description": "a react app which uses fetch to talk to apis",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dashboard -- webpack-dev-server --config ./webpack.config.js --content-base ./ --quiet",
+    "start": "webpack-dev-server --progress --colors",
     "test": "webpack-dev-server --progress --colors"
   },
   "author": "chethan",
