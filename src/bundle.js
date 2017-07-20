@@ -39546,16 +39546,27 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
 
     _createClass(ChatBot, [{
         key: 'componentDidMount',
-        value: function componentDidMount() {}
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.timerID = setInterval(function () {
+                return _this2.fetchMessages();
+            }, 1000);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            clearInterval(this.timerID);
+        }
     }, {
         key: 'fetchMessages',
         value: function fetchMessages() {
-            var _this2 = this;
+            var _this3 = this;
 
             fetch('http://10.22.14.66:3100').then(function (res) {
                 return res.json();
             }).then(function (data) {
-                _this2.setState({ messages: data });
+                _this3.setState({ messages: data });
                 var objDiv = document.getElementById("style-2");
                 objDiv.scrollTop = objDiv.scrollHeight;
             });
@@ -39565,7 +39576,7 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
     }, {
         key: 'handleKeyPress',
         value: function handleKeyPress(postData) {
-            var _this3 = this;
+            var _this4 = this;
 
             /*console.log(this.refs.text.value);
             var postData = {
@@ -39583,7 +39594,7 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
                 return res.json();
             }).then(function (data) {
                 //alert(data);
-                _this3.fetchMessages();
+                _this4.fetchMessages();
             });
 
             //this.setState({ messages: this.state.messages.push(postData) });
@@ -39605,20 +39616,21 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
     }, {
         key: 'clearAllMessages',
         value: function clearAllMessages() {
-            var _this4 = this;
+            var _this5 = this;
 
             fetch('http://10.22.14.66:3100/clear').then(function (res) {
                 return res.json();
             }).then(function (data) {
                 //alert(data);
                 _Reducers2.default.message.dispatch({ type: 'ADD_MESSAGE', message: data });
-                _this4.setState({ showDropDown: !_this4.state.showDropDown });
-                _this4.fetchMessages();
+                _this5.setState({ showDropDown: !_this5.state.showDropDown });
+                _this5.fetchMessages();
             });
         }
     }, {
         key: 'render',
         value: function render() {
+
             var botClass = "";
             var roomClass = "";
             var dropClass = "";

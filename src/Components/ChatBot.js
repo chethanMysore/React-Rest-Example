@@ -13,8 +13,16 @@ export class ChatBot extends React.Component {
         this.fetchMessages = this.fetchMessages.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
     }
+    
     componentDidMount() {
+        this.timerID = setInterval(
+            () => this.fetchMessages(),
+            1000
+        );
+    }
 
+    componentWillUnmount() {
+        clearInterval(this.timerID);
     }
 
     fetchMessages() {
@@ -81,6 +89,7 @@ export class ChatBot extends React.Component {
     }
 
     render() {
+
         var botClass = "";
         var roomClass = "";
         var dropClass = "";
