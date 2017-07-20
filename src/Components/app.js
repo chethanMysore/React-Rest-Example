@@ -1,6 +1,7 @@
 //React Dependencies
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import cookie from 'react-cookies';
 
 //Components
 import { DeviceList } from './DeviceList';
@@ -21,6 +22,14 @@ export class App extends Component {
         super(props);
     }
 
+    componentDidMount(){
+        var appId = new Date().getTime();
+        cookie.save('appId', appId, { path: '/' })
+    }
+
+    componentWillUnmount(){
+        cookie.remove('appId', { path: '/' })
+    }
     //Render method of App component
     render() {
         const navStyle = {

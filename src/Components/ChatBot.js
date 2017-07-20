@@ -2,6 +2,7 @@ import React from 'react';
 import { ChatRoom } from './ChatRoom';
 import Reducer from '../Reducers';
 
+
 export class ChatBot extends React.Component {
     constructor(props) {
         super(props);
@@ -67,12 +68,12 @@ export class ChatBot extends React.Component {
     }
 
     toggleChat() {
-        console.log('inside toggle');
+       
         this.setState({ isShow: !this.state.isShow });
     }
 
     toggleDropDown() {
-        console.log('inside drop-toggle');
+        
         this.setState({ showDropDown: !this.state.showDropDown });
     }
 
