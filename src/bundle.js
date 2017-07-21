@@ -39742,12 +39742,15 @@ var ChatBot = exports.ChatBot = function (_React$Component) {
         value: function fetchMessages() {
             var _this3 = this;
 
+            var length = this.state.messages.length;
             fetch('http://10.22.14.66:3100').then(function (res) {
                 return res.json();
             }).then(function (data) {
                 _this3.setState({ messages: data });
-                var objDiv = document.getElementById("style-2");
-                objDiv.scrollTop = objDiv.scrollHeight;
+                if (data.length != length) {
+                    var objDiv = document.getElementById("style-2");
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }
             });
 
             this.forceUpdate();
@@ -39987,8 +39990,10 @@ var ChatRoom = exports.ChatRoom = function (_React$Component) {
                 }
                 if (message.SenderName != "" && message.SenderName == 'user' + _reactCookies2.default.load('appId').toString()) {
                     message.textClass = "label-me";
+                    message.rectStyle = "rect-me";
                 } else {
                     message.textClass = "label-other";
+                    message.rectStyle = "rect-other";
                 }
             });
 
@@ -40007,13 +40012,57 @@ var ChatRoom = exports.ChatRoom = function (_React$Component) {
                             return _react2.default.createElement(
                                 'div',
                                 { key: message._id },
-                                _react2.default.createElement(
+                                message.textClass == 'label-me' ? _react2.default.createElement(
                                     'div',
-                                    { className: message.textClass },
-                                    message.MessageText,
+                                    { style: { paddingLeft: '2px' } },
+                                    _react2.default.createElement(
+                                        'svg',
+                                        { width: '125', height: '50', className: message.textClass },
+                                        _react2.default.createElement(
+                                            'g',
+                                            null,
+                                            _react2.default.createElement('rect', { x: '0', y: '0', rx: '20', ry: '20', width: '115', height: '25', className: message.rectStyle }),
+                                            _react2.default.createElement('polygon', { points: '100,25 110,22 115,40', style: { fill: "#fce5a6", stroke: "#fce5a6", strokeWidth: "1" } }),
+                                            'Sorry, your browser does not support inline SVG.',
+                                            _react2.default.createElement(
+                                                'text',
+                                                { x: '10', y: '15' },
+                                                message.MessageText
+                                            )
+                                        )
+                                    ),
                                     _react2.default.createElement(
                                         'sub',
-                                        { style: { fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f' } },
+                                        { style: { fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f', position: 'relative', top: '-34px', left: '-26px' } },
+                                        message.MessageAT
+                                    )
+                                ) : _react2.default.createElement(
+                                    'div',
+                                    null,
+                                    _react2.default.createElement(
+                                        'svg',
+                                        { width: '125', height: '50', className: message.textClass },
+                                        _react2.default.createElement(
+                                            'g',
+                                            null,
+                                            _react2.default.createElement('rect', { x: '0', y: '0', rx: '20', ry: '20', width: '115', height: '25', className: message.rectStyle }),
+                                            _react2.default.createElement('polygon', { points: '10,45 15,25 25,25', style: { fill: "#83c0f7", stroke: "#83c0f7", strokeWidth: "1" } }),
+                                            'Sorry, your browser does not support inline SVG.',
+                                            _react2.default.createElement(
+                                                'text',
+                                                { x: '10', y: '15' },
+                                                message.MessageText
+                                            ),
+                                            _react2.default.createElement(
+                                                'sub',
+                                                { style: { fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f', position: 'relative', top: '-34px', left: '-37px' } },
+                                                message.MessageAT
+                                            )
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'sub',
+                                        { style: { fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f', position: 'relative', top: '-34px', left: '-37px' } },
                                         message.MessageAT
                                     )
                                 )

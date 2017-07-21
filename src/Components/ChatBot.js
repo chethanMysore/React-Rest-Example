@@ -14,7 +14,7 @@ export class ChatBot extends React.Component {
         this.fetchMessages = this.fetchMessages.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
     }
-    
+
     componentDidMount() {
         this.timerID = setInterval(
             () => this.fetchMessages(),
@@ -27,13 +27,16 @@ export class ChatBot extends React.Component {
     }
 
     fetchMessages() {
+        var length = this.state.messages.length;
         fetch('http://10.22.14.66:3100')
             .then(res => {
                 return res.json();
             }).then(data => {
                 this.setState({ messages: data });
-                var objDiv = document.getElementById("style-2");
-                objDiv.scrollTop = objDiv.scrollHeight;
+                if (data.length != length) {
+                    var objDiv = document.getElementById("style-2");
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }
             });
 
         this.forceUpdate();
@@ -68,12 +71,12 @@ export class ChatBot extends React.Component {
     }
 
     toggleChat() {
-       
+
         this.setState({ isShow: !this.state.isShow });
     }
 
     toggleDropDown() {
-        
+
         this.setState({ showDropDown: !this.state.showDropDown });
     }
 

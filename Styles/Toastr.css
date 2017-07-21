@@ -40,11 +40,21 @@
             transition: opacity 2s, top 5s;
 }
 .rectStyle{
-  fill:#3e9b09;stroke:#3e9b09;stroke-width:1;position:relative
+  fill:#83c0f7;stroke:#83c0f7;stroke-width:1;position:relative
 }
+
+.rect-me{
+  fill:#fce5a6;stroke:#fce5a6;stroke-width:1;position:relative
+}
+
+.rect-other{
+  fill:#83c0f7;stroke:#83c0f7;stroke-width:1;position:relative
+}
+
 .chatbot-rect{
   fill:#3e9b09;stroke:#3e9b09;stroke-width:1
 }
+
 .chatbot-maximize{
    position: relative;
           
@@ -73,7 +83,7 @@
             width: 160px;
             height: 230px;
             opacity: 0.8;
-             transition:opacity 1s,top 1s,height 1s;
+             transition:opacity 300ms,top 300ms,height 300ms;
 }
 .chat-room-hide{
   background-color: #bef7df;
@@ -83,7 +93,7 @@
             width: 160px;
             height: 25px;
             opacity: 0;
-             transition:opacity 1s,top 1s,height 1s;
+             transition:opacity 300ms,top 300ms,height 300ms;
 }
 .chat-room-message{
       position: relative;
@@ -161,7 +171,7 @@
   text-align: left;
       padding-left: 6px;
     padding-bottom: 5px;
-
+        margin-right: 33px;
 }
 
 svg text {
