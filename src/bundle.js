@@ -40014,7 +40014,7 @@ var ChatRoom = exports.ChatRoom = function (_React$Component) {
                                 { key: message._id },
                                 message.textClass == 'label-me' ? _react2.default.createElement(
                                     'div',
-                                    { style: { paddingLeft: '2px' } },
+                                    { style: { height: '50px' } },
                                     _react2.default.createElement(
                                         'svg',
                                         { width: '125', height: '50', className: message.textClass },
@@ -40033,12 +40033,12 @@ var ChatRoom = exports.ChatRoom = function (_React$Component) {
                                     ),
                                     _react2.default.createElement(
                                         'sub',
-                                        { style: { fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f', position: 'relative', top: '-34px', left: '-26px' } },
+                                        { style: { fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f', position: 'relative', top: '-33px', left: '-25px', paddingLeft: '12px' } },
                                         message.MessageAT
                                     )
                                 ) : _react2.default.createElement(
                                     'div',
-                                    null,
+                                    { style: { height: '50px' } },
                                     _react2.default.createElement(
                                         'svg',
                                         { width: '125', height: '50', className: message.textClass },

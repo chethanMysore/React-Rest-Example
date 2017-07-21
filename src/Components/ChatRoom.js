@@ -88,7 +88,7 @@ export class ChatRoom extends React.Component {
                         {messages.map(message =>
 
                             <div key={message._id}>
-                                {message.textClass == 'label-me' ? <div style={{ paddingLeft: '2px' }}><svg width="125" height="50" className={message.textClass}>
+                                {message.textClass == 'label-me' ? <div style={{ height: '50px'}}><svg width="125" height="50" className={message.textClass}>
                                     <g>
                                         {/* <rect x="0" y="0" rx="20" ry="20" width="120" height="25" className="rectStyle" />
                                         <polygon points="10,45 15,25 25,25" style={{fill:"#3e9b09",stroke:"#3e9b09",strokeWidth:"1"}} />
@@ -101,9 +101,9 @@ export class ChatRoom extends React.Component {
 
                                     </g>
                                 </svg>
-                                    <sub style={{ fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f', position: 'relative',top: '-34px',left: '-26px' }}>{message.MessageAT}</sub>
+                                    <sub style={{ fontSize: '8px', fontFamily: 'Comic Sans MS,cursive,sans-serif', textShadow: '0px 0px 0px #335f6f', position: 'relative',top: '-33px',left: '-25px', paddingLeft: '12px' }}>{message.MessageAT}</sub>
                                 </div>
-                                    : <div><svg width="125" height="50" className={message.textClass}>
+                                    : <div style={{height: '50px'}}><svg width="125" height="50" className={message.textClass}>
                                         <g>
                                             <rect x="0" y="0" rx="20" ry="20" width="115" height="25" className={message.rectStyle} />
                                             <polygon points="10,45 15,25 25,25" style={{ fill: "#83c0f7", stroke: "#83c0f7", strokeWidth: "1" }} />
