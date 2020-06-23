@@ -1,49 +1,46 @@
-import React from 'react';
-import { ChatRoom } from './ChatRoom';
-import Reducer from '../Reducers';
-
+import React from "react";
+import { ChatRoom } from "./ChatRoom";
+import Reducer from "../Reducers";
 
 export class ChatBot extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { isShow: false, showDropDown: false, messages: [] }
+  constructor(props) {
+    super(props);
+    this.state = { isShow: false, showDropDown: false, messages: [] };
 
-        this.toggleChat = this.toggleChat.bind(this);
-        this.toggleDropDown = this.toggleDropDown.bind(this);
-        this.clearAllMessages = this.clearAllMessages.bind(this);
-        this.fetchMessages = this.fetchMessages.bind(this);
-        this.handleKeyPress = this.handleKeyPress.bind(this);
-    }
+    this.toggleChat = this.toggleChat.bind(this);
+    this.toggleDropDown = this.toggleDropDown.bind(this);
+    this.clearAllMessages = this.clearAllMessages.bind(this);
+    this.fetchMessages = this.fetchMessages.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
 
-    componentDidMount() {
-        this.timerID = setInterval(
-            () => this.fetchMessages(),
-            1000
-        );
-    }
+  componentDidMount() {
+    this.timerID = setInterval(() => this.fetchMessages(), 1000);
+  }
 
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
 
-    fetchMessages() {
-        var length = this.state.messages.length;
-        fetch('http://10.22.14.66:3100')
-            .then(res => {
-                return res.json();
-            }).then(data => {
-                this.setState({ messages: data });
-                if (data.length != length) {
-                    var objDiv = document.getElementById("style-2");
-                    objDiv.scrollTop = objDiv.scrollHeight;
-                }
-            });
+  fetchMessages() {
+    var length = this.state.messages.length;
+    fetch("http://localhost:3050")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({ messages: data });
+        if (data.length != length) {
+          var objDiv = document.getElementById("style-2");
+          objDiv.scrollTop = objDiv.scrollHeight;
+        }
+      });
 
-        this.forceUpdate();
-    }
+    this.forceUpdate();
+  }
 
-    handleKeyPress(postData) {
-        /*console.log(this.refs.text.value);
+  handleKeyPress(postData) {
+    /*console.log(this.refs.text.value);
         var postData = {
            
             MessageText: this.refs.text.value,
@@ -51,92 +48,103 @@ export class ChatBot extends React.Component {
         };
         console.log(postData);
         if (event != null && event.key == 'Enter') {*/
-        fetch('http://10.22.14.66:3100', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(postData)
-        })
-            .then(res => {
-                return res.json();
-            })
-            .then(data => {
-                //alert(data);
-                this.fetchMessages();
+    fetch("http://localhost:3050", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(postData),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        //alert(data);
+        this.fetchMessages();
+      });
 
-            })
+    //this.setState({ messages: this.state.messages.push(postData) });
 
-        //this.setState({ messages: this.state.messages.push(postData) });
+    //}
+  }
 
-        //}
-    }
+  toggleChat() {
+    this.setState({ isShow: !this.state.isShow });
+  }
 
-    toggleChat() {
+  toggleDropDown() {
+    this.setState({ showDropDown: !this.state.showDropDown });
+  }
 
-        this.setState({ isShow: !this.state.isShow });
-    }
-
-    toggleDropDown() {
-
+  clearAllMessages() {
+    fetch("http://localhost:3050/clear")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        //alert(data);
+        Reducer.message.dispatch({ type: "ADD_MESSAGE", message: data });
         this.setState({ showDropDown: !this.state.showDropDown });
+        this.fetchMessages();
+      });
+  }
+
+  render() {
+    var botClass = "";
+    var roomClass = "";
+    var dropClass = "";
+    var menuClass = "";
+    if (this.state.isShow) {
+      botClass = "chatbot-maximize";
+      roomClass = "chat-room-show";
+      menuClass = "menu-label-show";
+    } else {
+      botClass = "chatbot-minimize";
+      roomClass = "chat-room-hide";
+      menuClass = "menu-label-hide";
     }
-
-    clearAllMessages() {
-        fetch('http://10.22.14.66:3100/clear')
-            .then(res => {
-                return res.json();
-            }).then(data => {
-                //alert(data);
-                Reducer.message.dispatch({ type: 'ADD_MESSAGE', message: data });
-                this.setState({ showDropDown: !this.state.showDropDown });
-                this.fetchMessages();
-            });
+    if (this.state.showDropDown) {
+      dropClass = "chat-drop-show";
+    } else {
+      dropClass = "chat-drop-hide";
     }
-
-    render() {
-
-        var botClass = "";
-        var roomClass = "";
-        var dropClass = "";
-        var menuClass = "";
-        if (this.state.isShow) {
-            botClass = "chatbot-maximize";
-            roomClass = "chat-room-show";
-            menuClass = "menu-label-show";
-        }
-        else {
-            botClass = "chatbot-minimize";
-            roomClass = "chat-room-hide";
-            menuClass = "menu-label-hide";
-        }
-        if (this.state.showDropDown) {
-            dropClass = "chat-drop-show";
-        }
-        else {
-            dropClass = "chat-drop-hide";
-        }
-        return (
-            <div>
-                <div className={botClass} onClick={this.toggleChat}>
-                    <g>
-                        <svg width="200px" height="50px">
-                            <rect x="0" y="0" rx="20" ry="20" width="160" height="40" className="chatbot-rect" />
-                            Sorry, your browser does not support inline SVG.
-                        <text x="30" y="21">Chat     </text>
-                        </svg>
-                    </g>
-
-                </div>
-                <div className={menuClass}>
-                    <label htmlFor=""><span className="fa fa-bars" onClick={this.toggleDropDown}></span></label>
-                </div>
-                <div className={dropClass}>
-                    <label htmlFor="" onClick={this.clearAllMessages}>Clear All</label>
-                </div>
-                <div>
-                    <ChatRoom className={roomClass} handleKeyPress={this.handleKeyPress} messages={this.state.messages} />
-                </div>
-            </div>
-        );
-
-    }
+    return (
+      <div>
+        <div className={botClass} onClick={this.toggleChat}>
+          <g>
+            <svg width="200px" height="50px">
+              <rect
+                x="0"
+                y="0"
+                rx="20"
+                ry="20"
+                width="160"
+                height="40"
+                className="chatbot-rect"
+              />
+              Sorry, your browser does not support inline SVG.
+              <text x="30" y="21">
+                Chat{" "}
+              </text>
+            </svg>
+          </g>
+        </div>
+        <div className={menuClass}>
+          <label htmlFor="">
+            <span className="fa fa-bars" onClick={this.toggleDropDown}></span>
+          </label>
+        </div>
+        <div className={dropClass}>
+          <label htmlFor="" onClick={this.clearAllMessages}>
+            Clear All
+          </label>
+        </div>
+        <div>
+          <ChatRoom
+            className={roomClass}
+            handleKeyPress={this.handleKeyPress}
+            messages={this.state.messages}
+          />
+        </div>
+      </div>
+    );
+  }
 }
