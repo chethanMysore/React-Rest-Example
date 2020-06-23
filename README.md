@@ -1,4 +1,4 @@
 ## Steps to run the application
-- npm i\n
-- webpack --config webpack.config.js\n
+- npm i
+- webpack --config webpack.config.js
 - npm start
